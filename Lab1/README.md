@@ -2,9 +2,9 @@
 
 ### 1. Thông tin sinh viên
 - **Họ và tên:** Nguyễn Phước Thịnh
-- **MSSV:** [Điền MSSV của bạn]
-- **Lớp:** [Điền Lớp]
-- **Link Video YouTube:** [Dán link YouTube vào đây]
+- **MSSV:** 1150070040
+- **Lớp:** 11_TMĐT
+- **Link Video YouTube:** https://www.youtube.com/watch?v=RpG_ujTLglE
 
 ---
 
