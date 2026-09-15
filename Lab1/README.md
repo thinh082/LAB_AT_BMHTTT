@@ -16,10 +16,10 @@
 ---
 
 ### 3. Nội dung đã thực hiện
-1. Cấu hình Telnet và OpenSSH trên Kali Linux, tạo tài khoản sinh viên.
-2. Dùng Wireshark bắt gói Telnet (cổng 23) -> phân tích TCP Stream.
+1. Cấu hình Telnet và OpenSSH trên Kali Linux.
+2. Dùng Wireshark bắt gói Telnet (cổng 22/23) -> phân tích TCP Stream.
 3. Thử nghiệm đổi mật khẩu phức tạp trên Telnet -> kiểm chứng vẫn bị lộ Plaintext.
-4. Dùng Wireshark bắt gói SSH (cổng 22) -> kiểm tra Host-key fingerprint và phân tích gói tin mã hóa.
+4. Dùng Wireshark bắt gói SSH (cổng 22/23) -> kiểm tra Host-key fingerprint và phân tích gói tin mã hóa.
 5. Demo đăng nhập SSH bằng cặp khóa (SSH Key qua PuTTYgen) không dùng mật khẩu.
 6. Hoàn thành trả lời 11 câu hỏi trong báo cáo.
 
