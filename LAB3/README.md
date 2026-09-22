@@ -1,61 +1,85 @@
-# BÁO CÁO THỰC HÀNH LAB 3: NHẬN DIỆN VÀ ỨNG PHÓ CÁC MỐI ĐE DỌA ATTT
+# BÁO CÁO THỰC HÀNH LAB 3
+## NHẬN DIỆN VÀ ỨNG PHÓ CÁC MỐI ĐE DỌA AN TOÀN THÔNG TIN
 
-## 1. Thông Tin Sinh Viên
+---
+
+### 1. Thông Tin Sinh Viên
 - **Họ và tên:** Nguyễn Phước Thịnh
 - **MSSV:** 1150070040
 - **Lớp:** 11TMDT
 - **Môn học:** An toàn Hệ thống Thông tin
-- **Tên bài thực hành:** Lab 3 - Nhận diện và ứng phó các mối đe dọa đến an toàn thông tin
-- **Link Video Thực Hành: https://youtu.be/OYgzuUHa0d8
+- **Giảng viên hướng dẫn:** ThS. Phạm Trọng Huynh
+- **Link Video Thực Hành (YouTube):** https://youtu.be/pYhIRwxrt_Y
+
 ---
 
-## 2. Phiên Bản Môi Trường Thực Hành
+### 2. Môi Trường & Công Cụ Thực Hành
 - **Hệ điều hành:** Windows 11 x64, OS Build 26200
-- **Endpoint Protection:** Microsoft Defender Antivirus (RealTimeProtection: True, TamperProtection: True)
-- **Tường lửa:** Windows Defender Firewall (Enabled: True trên cả Domain, Private, Public)
-- **Công cụ phân tích & giám sát:**
-  - Python: 3.14.7
-  - Wireshark / TShark: 4.6.8
-  - Microsoft Sysmon: 15.22 (Schema 4.90)
-  - Microsoft Autoruns: 14.3
-  - Microsoft Process Explorer: 17.14
+- **Bảo vệ điểm cuối (Endpoint Protection):** Microsoft Defender Antivirus (RealTimeProtection: True, TamperProtection: True)
+- **Tường lửa (Firewall):** Windows Defender Firewall bật trên cả 3 mạng (Domain, Private, Public)
+- **Danh sách phiên bản công cụ chuẩn hóa:**
+  - Python: `3.14.7`
+  - Wireshark / TShark: `4.6.8`
+  - Microsoft Sysmon: `15.22` (Schema 4.90)
+  - Microsoft Autoruns: `14.3`
+  - Microsoft Process Explorer: `17.14`
 
 ---
 
-## 3. Cách Dựng Môi Trường
-1. Khởi tạo cấu trúc thư mục chuẩn trên ổ C: `C:\LAB3` gồm các thư mục con: `Evidence`, `Tools`, `Downloads`, `Assets`.
-2. Đồng bộ các công cụ Sysinternals vào `C:\LAB3\Tools` và tài nguyên bài lab vào `C:\LAB3\lab3_assets`.
-3. Kiểm tra tính sẵn sàng và xác nhận phiên bản chuẩn của toàn bộ 5 công cụ.
-4. Thu thập thông tin nền (Baseline) của hệ điều hành, Defender, Firewall và lưu bằng chứng vào `C:\LAB3\Evidence`.
+### 3. Các Bước Dựng Môi Trường
+1. **Khởi tạo thư mục làm việc:** Tạo thư mục `C:\LAB3` và 4 thư mục con theo chuẩn: `Evidence`, `Tools`, `Downloads`, `Assets`.
+2. **Ghi mốc thời gian:** Tự động lưu thời điểm bắt đầu vào file `C:\LAB3\Evidence\start_time.txt`.
+3. **Đồng bộ công cụ & dữ liệu:** Chép bộ công cụ Sysinternals vào `Tools/` và gói tài nguyên bài lab vào `lab3_assets/`.
+4. **Thu thập Baseline ban đầu:** Lưu thông tin nền tảng về OS, Defender, Firewall, Network và Process vào thư mục `Evidence/`.
 
 ---
 
-## 4. Các Tình Huống Đã Thực Hiện & Kết Quả
+### 4. Kết Quả Thực Hiện 7 Tình Huống
 
-| Tình huống | Nội dung thực hiện | Kết quả | Bằng chứng |
-| :--- | :--- | :--- | :--- |
-| **TH1** | Xây dựng Risk Register & Phân loại 5 nguồn đe dọa | **PASS** | Trình bày trong file báo cáo Word |
-| **TH2** | Kiểm chứng chu trình phát hiện mã độc bằng tệp EICAR | **PASS** | `H4_ProtectionHistory_EICAR.png`, `defender_eicar.txt` |
-| **TH3** | Kích hoạt Audit Logon, thử nghiệm tài khoản `lab3user`, xoay vòng mật khẩu | **PASS** | `H5_Event4625.png`, `auth_events_before_rotation.txt` |
-| **TH4** | Nhận diện Persistence (Run key, Scheduled Task) & HTTP Listener loopback | **PASS** | Ghi nhận qua Autoruns, Process Explorer |
-| **TH5** | Sniffing lưu lượng HTTP loopback (plaintext) và so sánh mã hóa HTTPS TLS | **PASS** | Wireshark capture |
-| **TH6** | Đánh giá DoS tải cục bộ và phân tích dataset DDoS / Mail bombing | **PASS** | Thống kê log phân tán |
-| **TH7** | Phân tích 5 chỉ dấu email lừa đảo và phân loại 6 case Social Engineering | **PASS** | Phân tích mẫu offline |
+| STT | Tình huống | Mục tiêu & Thao tác chính | Kết quả | Bằng chứng hình ảnh / Log |
+| :---: | :--- | :--- | :---: | :--- |
+| **TH1** | **Risk Register** | Phân loại 5 nguồn đe dọa và lập bảng quản trị rủi ro gắn với tài sản hệ thống. | **PASS** | Bảng phân tích trong file Word |
+| **TH2** | **Mã độc (Malware)** | Tạo chuỗi chuẩn EICAR; kiểm chứng Defender phát hiện, cách ly và ghi nhật ký. | **PASS** | `H4_ProtectionHistory_EICAR.png`<br>`defender_eicar.txt` |
+| **TH3** | **Tấn công mật khẩu** | Bật Audit Logon, tạo user `lab3user`, sinh log đăng nhập đúng/sai và đổi mật khẩu. | **PASS** | `H5_Event4625.png`<br>`auth_events_before_rotation.txt` |
+| **TH4** | **Cửa hậu (Backdoor)** | Nhận diện Persistence qua Registry Run, Scheduled Task và soi web server cổng 8080. | **PASS** | `H6_Sysmon_Event1.png`<br>`H7_Autoruns_LAB3_Run_Demo.png`<br>`H8_ProcessExplorer_Python.png` |
+| **TH5** | **Bắt gói tin (Sniffing)** | Bắt gói HTTP thấy chuỗi văn bản thuần (Plaintext); so sánh với HTTPS/TLS được mã hóa an toàn. | **PASS** | `H9_HTTP_Plaintext.png`<br>`H10_TLS_443.png` |
+| **TH6** | **DoS / DDoS / Mailbomb** | Chạy script DoS tải nội bộ (50 requests); phân tích dataset DDoS phân tán và log Mailbomb. | **PASS** | `H10_Load_and_Log_Analysis.png`<br>`local_load_test.txt` |
+| **TH7** | **Social Engineering** | Chỉ ra 5 dấu hiệu lừa đảo trong file email mẫu và phân loại 6 kịch bản phi kỹ thuật. | **PASS** | `H10_Phishing_Offline.png`<br>File mẫu `phishing_email.txt` |
+| **Mục 8** | **Cleanup & Recovery** | Dọn dẹp các mục thử nghiệm, khôi phục hệ thống sạch sẽ và băm mã toàn vẹn SHA-256. | **PASS** | `H11_Recovery_Verification.png`<br>`evidence_sha256.csv` |
 
 ---
 
-## 5. Lỗi Gặp Phải Và Cách Khắc Phục
-1. **Lỗi tham số lệnh `auditpol` (Error 0x00000057):**
-   - *Nguyên nhân:* PowerShell hiểu nhầm cặp ngoặc nhọn `{GUID}` không đặt trong dấu ngoặc kép.
-   - *Khắc phục:* Đặt GUID trong dấu nháy kép hoặc sử dụng trực tiếp tên danh mục `auditpol /set /subcategory:"Logon" /success:enable /failure:enable`.
+### 5. Các Lỗi Gặp Phải & Cách Khắc Phục
+
+1. **Lỗi lệnh `auditpol` báo sai tham số (Error 0x00000057):**
+   - *Hiện tượng:* PowerShell hiểu nhầm cặp ngoặc nhọn `{GUID}` là khối mã ScriptBlock.
+   - *Khắc phục:* Đặt GUID vào trong dấu ngoặc kép `"{...}"` hoặc dùng trực tiếp tên danh mục `auditpol /set /subcategory:"Logon" /success:enable /failure:enable`.
+
 2. **Lỗi `runas` báo `Unable to acquire user password`:**
-   - *Nguyên nhân:* Cửa sổ PowerShell trên Windows 11 xung đột tính năng đọc mật khẩu ẩn khi dán phím qua clipboard.
-   - *Khắc phục:* Nhập trực tiếp mật khẩu từ bàn phím hoặc sử dụng đối tượng `PSCredential` của PowerShell để xác thực tự động.
-3. **Đường dẫn Wireshark không nằm ở ổ C:**
-   - *Nguyên nhân:* Wireshark được cài đặt tại `D:\Software\Wireshark`.
-   - *Khắc phục:* Tự động kiểm tra và nhận diện đường dẫn thực thi của `tshark.exe` trên hệ thống.
+   - *Hiện tượng:* Cửa sổ dòng lệnh PowerShell trên Windows 11 chặn thao tác dán phím qua clipboard (Ctrl + V) ở khung nhập mật khẩu ẩn.
+   - *Khắc phục:* Dùng bàn phím gõ trực tiếp từng ký tự hoặc sử dụng lệnh PowerShell gọi đối tượng `PSCredential` để đăng nhập tự động.
+
+3. **Lỗi không tìm thấy `tshark.exe` của Wireshark:**
+   - *Hiện tượng:* Wireshark được cài đặt tại ổ `D:\Software\Wireshark` thay vì đường dẫn mặc định `C:\Program Files\Wireshark`.
+   - *Khắc phục:* Bổ sung câu lệnh điều kiện tự động nhận diện và trỏ đúng đường dẫn thực tế của Wireshark trên hệ thống.
+
+4. **Lỗi Autoruns không hiển thị mục `LAB3_Run_Demo`:**
+   - *Hiện tượng:* Autoruns mặc định bật tính năng ẩn các tệp của Microsoft (`Hide Windows Entries`), mà `notepad.exe` là tệp hệ thống nên bị ẩn.
+   - *Khắc phục:* Vào menu `Options` > bỏ tích chọn `Hide Windows Entries` và `Hide Microsoft Entries`, sau đó nhấn `F5` để làm mới.
 
 ---
 
-## 6. Tính Toàn Vẹn Bằng Chứng Số
-- Toàn bộ các tệp bằng chứng và nhật ký trong thư mục `Evidence` được tính toán mã băm SHA-256 lưu tại `evidence_sha256.csv`.
+### 6. Cấu Trúc Thư Mục Nộp Bài (Repository `LAB_AT_BMHTTT/LAB3/`)
+```text
+LAB3/
+├── 11TMDT-LAB3_1150070040-NguyenPhuocThinh.docx   # File báo cáo Word trả lời 20 câu hỏi & dán ảnh
+├── README.md                                      # File thông tin tổng quan bài lab này
+├── evidence_sha256.csv                            # Bảng mã băm SHA-256 xác thực toàn vẹn bằng chứng
+├── Evidence
+```
+
+---
+
+### 7. Tính Toàn Vẹn Của Bằng Chứng Số
+- Toàn bộ các tệp bằng chứng thực hành trong thư mục `Evidence` đã được tính toán mã băm mật mã học **SHA-256** và xuất ra tệp `evidence_sha256.csv`.
+- Đảm bảo tính bất biến, không bị chỉnh sửa hay làm sai lệch kể từ thời điểm kết thúc bài thực hành.
