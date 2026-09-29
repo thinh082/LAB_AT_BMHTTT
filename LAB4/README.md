@@ -6,20 +6,20 @@
 * **Lớp:** 11TMDT
 * **Tên bài lab:** LAB 4 – KHẢO SÁT VÀ ĐÁNH GIÁ BỀ MẶT MẠNG BẰNG NMAP
 * **Môn học:** An toàn hệ thống thông tin (Giảng viên: Thầy Huỳnh)
-* **Link Video YouTube:** *https://youtu.be/NjXfHiKdLzA*
+* **Link Video YouTube:** https://youtu.be/NjXfHiKdLzA
 
 ---
 
 ## 2. PHIÊN BẢN MÔI TRƯỜNG
-* **Nền tảng ảo hóa:** VMware Workstation 26
+* **Nền tảng ảo hóa:** VMware Workstation 17.x
 * **Máy quét (Scanner):**
   * Hệ điều hành: Kali Linux (User: `nguyenphuocthinh`)
   * Phiên bản Nmap: `Nmap 7.99`
   * Địa chỉ IP: `192.168.119.129`
 * **Máy mục tiêu (Target):**
-  * Hệ điều hành: Metasploitable 2
-  * Địa chỉ IP: `192.168.119.128` 
-* **Máy thật đối chiếu:** Windows (Cài đặt Nmap 7.991 + Npcap)
+  * Hệ điều hành: Metasploitable 2 (Linux Kernel 2.6.9 - 2.6.33)
+  * Địa chỉ IP: `192.168.119.128` (MAC: `00:0C:29:43:9B:41`)
+* **Máy thật đối chiếu:** Windows 10/11 (Cài đặt Nmap 7.991 + Npcap)
 
 ---
 
@@ -33,16 +33,16 @@
 
 ## 4. CÁC TÌNH HUỐNG ĐÃ THỰC HIỆN & KẾT QUẢ PASS/FAIL
 
-| STT | Tình huống thực hiện | Câu lệnh Nmap | Kết quả ghi nhận | Đánh giá 
-| :---: | :--- | :--- | :--- | :---: | :---: |
+| STT | Tình huống thực hiện | Câu lệnh Nmap | Kết quả ghi nhận | Đánh giá |
+| :---: | :--- | :--- | :--- | :---: |
 | **1** | Xác định IP máy quét & máy đích | `ip -br addr` / `ifconfig` | Ghi nhận IP `192.168.119.129` và `192.168.119.128` | **PASS** |
-| **2** | Dò quét thiết bị mạng (Host Discovery) | `sudo nmap -sn 192.168.119.0/24` | Phát hiện 3 hosts UP, xác định MAC VMware của máy đích | **PASS** | 
-| **3** | Khảo sát TCP Connect Scan | `nmap -sT 192.168.119.128` | Hoàn tất bắt tay 3 bước, phát hiện 23 cổng TCP open | **PASS** 
-| **4** | Khảo sát TCP SYN Stealth Scan | `sudo nmap -sS 192.168.119.128` | Bắt tay nửa mở (gửi RST ngắt kết nối), 23 cổng open | **PASS** | 
-| **5** | Nhận diện Dịch vụ & Phiên bản | `sudo nmap -sV 192.168.119.128` | Bóc tách chính xác: vsftpd 2.3.4, OpenSSH 4.7p1, Apache 2.2.8, Samba 3.X, MySQL 5.0.51a... | **PASS** 
-| **6** | Nhận diện Hệ điều hành | `sudo nmap -O 192.168.119.128` | Nhận diện chính xác nhân OS: `Linux 2.6.X` | **PASS** | [Ảnh 6](img/Anh6_OS_Detection.png) |
-| **7** | Mở rộng với NSE Script | `sudo nmap -p 139,445 --script smb-os-discovery 192.168.119.128` | Trích xuất Computer name `metasploitable`, Workgroup `WORKGROUP`, OS `Unix Samba 3.0.20` | **PASS**  |
-| **8** | Xuất báo cáo & Tạo HTML | `sudo nmap -sV -O -oA Lab4_Report_NguyenPhuocThinh 192.168.119.128`<br>`xsltproc ...xml -o ...html` | Xuất thành công 4 file bằng chứng: `.nmap`, `.xml`, `.gnmap`, `.html` | **PASS** | 
+| **2** | Dò quét thiết bị mạng (Host Discovery) | `sudo nmap -sn 192.168.119.0/24` | Phát hiện 3 hosts UP, xác định MAC VMware của máy đích | **PASS** |
+| **3** | Khảo sát TCP Connect Scan | `nmap -sT 192.168.119.128` | Hoàn tất bắt tay 3 bước, phát hiện 23 cổng TCP open | **PASS** |
+| **4** | Khảo sát TCP SYN Stealth Scan | `sudo nmap -sS 192.168.119.128` | Bắt tay nửa mở (gửi RST ngắt kết nối), 23 cổng open | **PASS** |
+| **5** | Nhận diện Dịch vụ & Phiên bản | `sudo nmap -sV 192.168.119.128` | Bóc tách chính xác: vsftpd 2.3.4, OpenSSH 4.7p1, Apache 2.2.8, Samba 3.X, MySQL 5.0.51a... | **PASS** |
+| **6** | Nhận diện Hệ điều hành | `sudo nmap -O 192.168.119.128` | Nhận diện chính xác nhân OS: `Linux 2.6.X` | **PASS** |
+| **7** | Mở rộng với NSE Script | `sudo nmap -p 139,445 --script smb-os-discovery 192.168.119.128` | Trích xuất Computer name `metasploitable`, Workgroup `WORKGROUP`, OS `Unix Samba 3.0.20` | **PASS** |
+| **8** | Xuất báo cáo & Tạo HTML | `sudo nmap -sV -O -oA Lab4_Report_NguyenPhuocThinh 192.168.119.128`<br>`xsltproc ...xml -o ...html` | Xuất thành công 4 file bằng chứng: `.nmap`, `.xml`, `.gnmap`, `.html` | **PASS** |
 
 ---
 
