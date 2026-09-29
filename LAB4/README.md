@@ -1,36 +1,58 @@
-# BÁO CÁO THỰC HÀNH LAB 4 - NMAP
+# BÁO CÁO THỰC HÀNH AN TOÀN HỆ THỐNG THÔNG TIN
 
-## 👤 THÔNG TIN SINH VIÊN
+## 1. THÔNG TIN SINH VIÊN & BÀI LAB
 * **Họ và tên:** Nguyễn Phước Thịnh
-* **MSSV:** 1150070040
+* **Mã số sinh viên (MSSV):** 1150070040
 * **Lớp:** 11TMDT
-* **Môn học:** An toàn hệ thống thông tin * **Link Video YouTube:** *https://youtu.be/NjXfHiKdLzA*
+* **Tên bài lab:** LAB 4 – KHẢO SÁT VÀ ĐÁNH GIÁ BỀ MẶT MẠNG BẰNG NMAP
+* **Môn học:** An toàn hệ thống thông tin (Giảng viên: Thầy Huỳnh)
+* **Link Video YouTube:** *https://youtu.be/NjXfHiKdLzA*
 
 ---
 
-## MÔI TRƯỜNG THỰC HÀNH (HOST-ONLY)
-* **Máy quét (Kali Linux):** `192.168.119.129` (User: `nguyenphuocthinh`)
-* **Máy đích (Metasploitable 2):** `192.168.119.128` (MAC: `00:0C:29:43:9B:41`)
-* **Dải mạng Subnet:** `192.168.119.0/24`
+## 2. PHIÊN BẢN MÔI TRƯỜNG
+* **Nền tảng ảo hóa:** VMware Workstation 26
+* **Máy quét (Scanner):**
+  * Hệ điều hành: Kali Linux (User: `nguyenphuocthinh`)
+  * Phiên bản Nmap: `Nmap 7.99`
+  * Địa chỉ IP: `192.168.119.129`
+* **Máy mục tiêu (Target):**
+  * Hệ điều hành: Metasploitable 2
+  * Địa chỉ IP: `192.168.119.128` 
+* **Máy thật đối chiếu:** Windows (Cài đặt Nmap 7.991 + Npcap)
 
 ---
 
-## CÁC CÔNG VIỆC ĐÃ LÀM ĐƯỢC
-1. **Kiểm tra thông mạng & Dò quét Host (Host Discovery):**
-   * Kiểm tra thông suốt kết nối giữa Kali và Metasploitable 2 (`ping -c 4 192.168.119.128`).
-   * Dò tìm toàn bộ thiết bị đang hoạt động trong dải mạng (`sudo nmap -sn 192.168.119.0/24`).
-2. **Khảo sát các kỹ thuật quét cổng TCP:**
-   * Thực hiện TCP Connect Scan (`nmap -sT`) hoàn tất bắt tay 3 bước TCP.
-   * Thực hiện TCP SYN Stealth Scan (`sudo nmap -sS`) bắt tay nửa mở, phát hiện 23 cổng mở.
-3. **Nhận diện Dịch vụ, Phiên bản và Hệ điều hành:**
-   * Nhận diện chi tiết phần mềm và phiên bản trên các cổng mở (`sudo nmap -sV`).
-   * Nhận diện hệ điều hành máy đích qua TCP/IP fingerprint (`sudo nmap -O` $\rightarrow$ Linux 2.6.X).
-4. **Mở rộng khảo sát bằng Nmap Scripting Engine (NSE):**
-   * Sử dụng script `smb-os-discovery` trích xuất thông tin Computer Name, Workgroup và OS Samba.
-5. **Xuất hồ sơ báo cáo đa định dạng & Tạo trang HTML:**
-   * Xuất kết quả đồng thời ra 3 định dạng `.nmap`, `.xml`, `.gnmap` bằng tham số `-oA`.
-   * Sử dụng công cụ `xsltproc` chuyển đổi tệp XML sang giao diện Web HTML trực quan.
+## 3. CÁCH DỰNG MÔI TRƯỜNG
+* **Bước 1 (Cấu hình mạng cô lập):** Cấu hình Network Adapter của cả 2 máy ảo (Kali Linux và Metasploitable 2) sang chế độ **Host-Only** để đảm bảo an toàn tuyệt đối và cùng chung dải subnet `192.168.119.0/24`.
+* **Bước 2 (Xác định IP máy đích):** Khởi động Metasploitable 2, đăng nhập tài khoản `msfadmin / msfadmin`, chạy lệnh `ifconfig` ghi nhận IP `192.168.119.128`.
+* **Bước 3 (Xác định IP máy quét):** Khởi động Kali Linux, mở Terminal chạy lệnh `ip -br addr` ghi nhận IP `192.168.119.129`.
+* **Bước 4 (Kiểm tra thông mạng):** Từ Kali Linux, gửi 4 gói tin ICMP kiểm tra kết nối: `ping -c 4 192.168.119.128` (kết quả trả về 0% packet loss, kết nối thông suốt).
 
 ---
 
+## 4. CÁC TÌNH HUỐNG ĐÃ THỰC HIỆN & KẾT QUẢ PASS/FAIL
 
+| STT | Tình huống thực hiện | Câu lệnh Nmap | Kết quả ghi nhận | Đánh giá | Minh chứng |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| **1** | Xác định IP máy quét & máy đích | `ip -br addr` / `ifconfig` | Ghi nhận IP `192.168.119.129` và `192.168.119.128` | **PASS** | [Ảnh 1](img/Anh1_IP_KaliLinux.png) & [Ảnh 2](img/Anh2_IP_Metasploitable2.png) |
+| **2** | Dò quét thiết bị mạng (Host Discovery) | `sudo nmap -sn 192.168.119.0/24` | Phát hiện 3 hosts UP, xác định MAC VMware của máy đích | **PASS** | [Ảnh 3](img/Anh3_Host_Discovery.png) |
+| **3** | Khảo sát TCP Connect Scan | `nmap -sT 192.168.119.128` | Hoàn tất bắt tay 3 bước, phát hiện 23 cổng TCP open | **PASS** | [Ảnh 4](img/Anh4_TCP_Scan_sS_sT.png) |
+| **4** | Khảo sát TCP SYN Stealth Scan | `sudo nmap -sS 192.168.119.128` | Bắt tay nửa mở (gửi RST ngắt kết nối), 23 cổng open | **PASS** | [Ảnh 4](img/Anh4_TCP_Scan_sS_sT.png) |
+| **5** | Nhận diện Dịch vụ & Phiên bản | `sudo nmap -sV 192.168.119.128` | Bóc tách chính xác: vsftpd 2.3.4, OpenSSH 4.7p1, Apache 2.2.8, Samba 3.X, MySQL 5.0.51a... | **PASS** | [Ảnh 5](img/Anh5_Service_Version_sV.png) |
+| **6** | Nhận diện Hệ điều hành | `sudo nmap -O 192.168.119.128` | Nhận diện chính xác nhân OS: `Linux 2.6.X` | **PASS** | [Ảnh 6](img/Anh6_OS_Detection.png) |
+| **7** | Mở rộng với NSE Script | `sudo nmap -p 139,445 --script smb-os-discovery 192.168.119.128` | Trích xuất Computer name `metasploitable`, Workgroup `WORKGROUP`, OS `Unix Samba 3.0.20` | **PASS** | [Ảnh 7](img/Anh7_NSE_Script_SMB.png) |
+| **8** | Xuất báo cáo & Tạo HTML | `sudo nmap -sV -O -oA Lab4_Report_NguyenPhuocThinh 192.168.119.128`<br>`xsltproc ...xml -o ...html` | Xuất thành công 4 file bằng chứng: `.nmap`, `.xml`, `.gnmap`, `.html` | **PASS** | [Ảnh 8](img/Anh8_Xuat_Bao_Cao_File.png) |
+
+---
+
+## 5. LỖI GẶP PHẢI VÀ CÁCH KHẮC PHỤC
+* **Lỗi 1: Nhầm lẫn địa chỉ Host thay vì địa chỉ Subnet khi Host Discovery**
+  * *Mô tả:* Khi gõ lệnh quét mạng diện rộng, ban đầu dễ gõ nhầm IP máy đích kèm `/24` (ví dụ `192.168.119.128/24`).
+  * *Cách khắc phục:* Đổi phần Host ID về số `0` theo đúng chuẩn phân chia mạng CIDR (`192.168.119.0/24`) để đảm bảo tính chuẩn xác học thuật và quét toàn bộ dải IP từ `.1` đến `.254`.
+* **Lỗi 2: Thiếu quyền Root khi thực thi các kỹ thuật can thiệp gói tin thô (Raw Packet)**
+  * *Mô tả:* Chạy các lệnh `-sS`, `-O`, `-sn` dưới user thông thường bị báo lỗi từ chối quyền truy cập raw socket.
+  * *Cách khắc phục:* Luôn thêm tiền tố `sudo` trước câu lệnh Nmap (`sudo nmap ...`) và nhập mật khẩu quản trị để cấp quyền tạo gói tin thô.
+* **Lỗi 3: Thời gian quét dịch vụ `-sV` kéo dài nếu quét toàn bộ cổng**
+  * *Mô tả:* Quét toàn bộ 65.535 cổng với tham số `-sV` tốn rất nhiều thời gian chờ đợi phản hồi banner.
+  * *Cách khắc phục:* Tập trung quét top 1000 cổng mặc định phổ biến của Nmap hoặc lọc theo danh sách cổng trọng yếu bằng tham số `-p` để tối ưu thời gian quay video và ghi nhận kết quả nhanh chóng.
