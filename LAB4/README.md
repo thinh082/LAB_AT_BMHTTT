@@ -33,16 +33,16 @@
 
 ## 4. CÁC TÌNH HUỐNG ĐÃ THỰC HIỆN & KẾT QUẢ PASS/FAIL
 
-| STT | Tình huống thực hiện | Câu lệnh Nmap | Kết quả ghi nhận | Đánh giá | Minh chứng |
+| STT | Tình huống thực hiện | Câu lệnh Nmap | Kết quả ghi nhận | Đánh giá 
 | :---: | :--- | :--- | :--- | :---: | :---: |
-| **1** | Xác định IP máy quét & máy đích | `ip -br addr` / `ifconfig` | Ghi nhận IP `192.168.119.129` và `192.168.119.128` | **PASS** | [Ảnh 1](img/Anh1_IP_KaliLinux.png) & [Ảnh 2](img/Anh2_IP_Metasploitable2.png) |
-| **2** | Dò quét thiết bị mạng (Host Discovery) | `sudo nmap -sn 192.168.119.0/24` | Phát hiện 3 hosts UP, xác định MAC VMware của máy đích | **PASS** | [Ảnh 3](img/Anh3_Host_Discovery.png) |
-| **3** | Khảo sát TCP Connect Scan | `nmap -sT 192.168.119.128` | Hoàn tất bắt tay 3 bước, phát hiện 23 cổng TCP open | **PASS** | [Ảnh 4](img/Anh4_TCP_Scan_sS_sT.png) |
-| **4** | Khảo sát TCP SYN Stealth Scan | `sudo nmap -sS 192.168.119.128` | Bắt tay nửa mở (gửi RST ngắt kết nối), 23 cổng open | **PASS** | [Ảnh 4](img/Anh4_TCP_Scan_sS_sT.png) |
-| **5** | Nhận diện Dịch vụ & Phiên bản | `sudo nmap -sV 192.168.119.128` | Bóc tách chính xác: vsftpd 2.3.4, OpenSSH 4.7p1, Apache 2.2.8, Samba 3.X, MySQL 5.0.51a... | **PASS** | [Ảnh 5](img/Anh5_Service_Version_sV.png) |
+| **1** | Xác định IP máy quét & máy đích | `ip -br addr` / `ifconfig` | Ghi nhận IP `192.168.119.129` và `192.168.119.128` | **PASS** |
+| **2** | Dò quét thiết bị mạng (Host Discovery) | `sudo nmap -sn 192.168.119.0/24` | Phát hiện 3 hosts UP, xác định MAC VMware của máy đích | **PASS** | 
+| **3** | Khảo sát TCP Connect Scan | `nmap -sT 192.168.119.128` | Hoàn tất bắt tay 3 bước, phát hiện 23 cổng TCP open | **PASS** 
+| **4** | Khảo sát TCP SYN Stealth Scan | `sudo nmap -sS 192.168.119.128` | Bắt tay nửa mở (gửi RST ngắt kết nối), 23 cổng open | **PASS** | 
+| **5** | Nhận diện Dịch vụ & Phiên bản | `sudo nmap -sV 192.168.119.128` | Bóc tách chính xác: vsftpd 2.3.4, OpenSSH 4.7p1, Apache 2.2.8, Samba 3.X, MySQL 5.0.51a... | **PASS** 
 | **6** | Nhận diện Hệ điều hành | `sudo nmap -O 192.168.119.128` | Nhận diện chính xác nhân OS: `Linux 2.6.X` | **PASS** | [Ảnh 6](img/Anh6_OS_Detection.png) |
-| **7** | Mở rộng với NSE Script | `sudo nmap -p 139,445 --script smb-os-discovery 192.168.119.128` | Trích xuất Computer name `metasploitable`, Workgroup `WORKGROUP`, OS `Unix Samba 3.0.20` | **PASS** | [Ảnh 7](img/Anh7_NSE_Script_SMB.png) |
-| **8** | Xuất báo cáo & Tạo HTML | `sudo nmap -sV -O -oA Lab4_Report_NguyenPhuocThinh 192.168.119.128`<br>`xsltproc ...xml -o ...html` | Xuất thành công 4 file bằng chứng: `.nmap`, `.xml`, `.gnmap`, `.html` | **PASS** | [Ảnh 8](img/Anh8_Xuat_Bao_Cao_File.png) |
+| **7** | Mở rộng với NSE Script | `sudo nmap -p 139,445 --script smb-os-discovery 192.168.119.128` | Trích xuất Computer name `metasploitable`, Workgroup `WORKGROUP`, OS `Unix Samba 3.0.20` | **PASS**  |
+| **8** | Xuất báo cáo & Tạo HTML | `sudo nmap -sV -O -oA Lab4_Report_NguyenPhuocThinh 192.168.119.128`<br>`xsltproc ...xml -o ...html` | Xuất thành công 4 file bằng chứng: `.nmap`, `.xml`, `.gnmap`, `.html` | **PASS** | 
 
 ---
 
